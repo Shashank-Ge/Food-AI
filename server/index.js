@@ -12,21 +12,21 @@ app.get('/', (req, res) => {
   res.json({ message: 'Hello from backend' })
 })
 
-app.post ( '/upload' , upload.single('image')  , (req,res) => {
-    //If no file uploaded
-    if (!file.req) {
-        return res.status(400).json({error : "No image recieved"})
-    }
+app.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No image received" })
+  }
 
-    console.log (`Received File : ${res.file.orginalName} `)
-    console.log (`Size : ${res.file.size} bytes` )
+  console.log("Received File:", req.file.originalname)
+  console.log("Size:", req.file.size, "bytes")
 
-    res.json ({
-        message : "Image Uploaded Successfuly",
-        filename : req.file.originalName ,
-        size : req.file.size
-    })
+  return res.json({
+    message: "Image Uploaded Successfully",
+    filename: req.file.originalname,
+    size: req.file.size
+  })
 })
+
 
 
 app.listen(5000, () => console.log('Server running on port 5000'))
