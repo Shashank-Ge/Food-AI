@@ -1,7 +1,10 @@
+require('dotenv').config()
+
 const express = require('express')
 const cors = require('cors')
 const multer = require ('multer')
 const upload = multer ( { storage : multer.memoryStorage() })
+const analyzeFoodImage = require("./groq")
 
 
 const app = express()
@@ -12,7 +15,7 @@ app.get('/', (req, res) => {
   res.json({ message: 'Hello from backend' })
 })
 
-app.post('/upload', upload.single('image'), (req, res) => {
+app.post('/upload', upload.single('image'), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: "No image received" })
   }
@@ -20,10 +23,14 @@ app.post('/upload', upload.single('image'), (req, res) => {
   console.log("Received File:", req.file.originalname)
   console.log("Size:", req.file.size, "bytes")
 
+  // Sending image to Gemini
+  const analysis = await analyzeFoodImage (req.file.buffer)
+
   return res.json({
-    message: "Image Uploaded Successfully",
+    message: "Analyzed",
     filename: req.file.originalname,
-    size: req.file.size
+    size: req.file.size,
+    analysis
   })
 })
 
