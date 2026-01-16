@@ -1,4 +1,5 @@
 const Groq = require("groq-sdk");
+const sharp = require("sharp");
 
 const client = new Groq({
   apiKey: process.env.GROQ_API_KEY
@@ -9,24 +10,25 @@ function bufferToBase64(buffer) {
 }
 
 async function analyzeFoodImage(buffer) {
-  const base64 = bufferToBase64(buffer);
+  // Convert any image format (including AVIF) to JPEG for Groq compatibility
+  const jpegBuffer = await sharp(buffer)
+    .jpeg({ quality: 85 })
+    .toBuffer();
+  
+  const base64 = bufferToBase64(jpegBuffer);
 
-  const prompt = `
-You are a nutrition expert.
-Identify the food in the image and return JSON ONLY:
+  const prompt = `You are a nutrition expert. Identify the food in the image and return JSON ONLY in this exact format:
 {
- "food": "",
- "health": "healthy | moderate | unhealthy | uncertain",
- "reason": "",
- "next_meal": ""
-}
-`;
+ "food": "name of the food",
+ "health": "healthy or moderate or unhealthy or uncertain",
+ "reason": "brief explanation",
+ "next_meal": "suggestion for next meal"
+}`;
 
   try {
     const response = await client.chat.completions.create({
-      model: "llava-v1.6-34b",
+      model: "meta-llama/llama-4-scout-17b-16e-instruct",
       messages: [
-        { role: "system", content: prompt },
         {
           role: "user",
           content: [
@@ -38,25 +40,31 @@ Identify the food in the image and return JSON ONLY:
             },
             {
               type: "text",
-              text: "Analyze this food and respond in JSON only."
+              text: prompt
             }
           ]
         }
       ],
-      temperature: 0.2
+      temperature: 0.2,
+      max_tokens: 500
     });
 
     let raw = response.choices[0].message.content.trim();
-    raw = raw.replace(/```json|```/g, "");
+    console.log("Raw Groq response:", raw);
+    
+    // Remove markdown code blocks if present
+    raw = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    
     return JSON.parse(raw);
 
   } catch (err) {
-    console.error("Groq OCR error:", err.message);
+    console.error("Groq Vision error:", err);
+    console.error("Error details:", err.message);
     return {
       food: "unknown",
       health: "uncertain",
-      reason: "OCR failed",
-      next_meal: "drink water"
+      reason: `API error: ${err.message}`,
+      next_meal: "Try uploading a clearer image"
     };
   }
 }
