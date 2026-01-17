@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-// Test routes
+// Simple health check endpoints - useful for deployment monitoring
 router.get('/', (req, res) => {
-  res.json({ message: 'Hello from backend' })
+  res.json({ message: 'Hello from backend' });
 });
 
 router.get('/test-cloud', (req, res) => {
