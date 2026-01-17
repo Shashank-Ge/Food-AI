@@ -18,7 +18,7 @@ const uploadImageBuffer = async (buffer, folder = "food-ai") => {
 const uploadWithFallback = async (buffer, folder, fallbackUrl = null) => {
   try {
     const uploadResult = await uploadImageBuffer(buffer, folder);
-    console.log("✓ Cloudinary upload successful:", uploadResult.secure_url);
+    // Cloudinary upload successful
     return uploadResult.secure_url;
   } catch (cloudinaryError) {
     console.error("✗ Cloudinary upload failed:", cloudinaryError.message);

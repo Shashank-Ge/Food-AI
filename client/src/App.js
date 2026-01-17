@@ -34,21 +34,6 @@ function App() {
     resetAnalysis(); // Clear previous state when switching modes
   };
 
-  // Handle file selection for upload mode
-  const handleFileSelect = (file) => {
-    if (file) {
-      const objectUrl = URL.createObjectURL(file);
-      startAnalysis(objectUrl);
-    }
-  };
-
-  // Handle URL input for URL mode
-  const handleUrlInput = (url) => {
-    if (url) {
-      startAnalysis(url);
-    }
-  };
-
   return (
     <div className="app-container">
       {/* Header */}

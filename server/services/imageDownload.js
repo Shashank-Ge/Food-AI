@@ -61,12 +61,12 @@ const downloadImageWithFallback = async (imageUrl) => {
   // Try each method until one works
   for (let i = 0; i < methods.length; i++) {
     try {
-      console.log(`Trying download method ${i + 1}...`);
+      // Trying download method
       const response = await methods[i]();
-      console.log(`✓ Method ${i + 1} succeeded`);
+      // Method succeeded
       return response;
     } catch (error) {
-      console.log(`✗ Method ${i + 1} failed:`, error.message);
+      // Method failed, trying next
       lastError = error;
       continue;
     }

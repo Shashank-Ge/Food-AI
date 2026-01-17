@@ -66,7 +66,7 @@ Return JSON strictly in this format:
     });
 
     let raw = response.choices[0].message.content.trim();
-    console.log("Raw Groq response:", raw);
+    // Processing AI response
     
     // Clean up markdown formatting that sometimes appears
     raw = raw.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '../config';
 
 // I extract analysis state management to keep App.js focused on layout
 const useAnalysis = () => {
@@ -11,7 +12,7 @@ const useAnalysis = () => {
   // Load history on mount
   const loadHistory = async () => {
     try {
-      const res = await fetch('http://localhost:5000/history');
+      const res = await fetch(`${API_BASE_URL}/history`);
       const data = await res.json();
       setHistory(data.meals || []);
     } catch (err) {

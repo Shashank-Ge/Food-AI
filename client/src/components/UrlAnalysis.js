@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_BASE_URL } from '../config';
 
 // I separate URL analysis to keep the logic focused and reusable
 const UrlAnalysis = ({ onAnalysisComplete, onError, onUrlChange }) => {
@@ -43,7 +44,7 @@ const UrlAnalysis = ({ onAnalysisComplete, onError, onUrlChange }) => {
     onError(null);
 
     try {
-      const res = await fetch('http://localhost:5000/analyze-url', {
+      const res = await fetch(`${API_BASE_URL}/analyze-url`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -52,7 +53,7 @@ const UrlAnalysis = ({ onAnalysisComplete, onError, onUrlChange }) => {
       });
 
       const data = await res.json();
-      console.log("URL analysis response:", data);
+      // URL analysis response received
 
       if (!res.ok) {
         throw new Error(data.error || 'URL analysis failed');

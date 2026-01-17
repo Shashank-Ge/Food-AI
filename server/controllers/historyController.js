@@ -36,7 +36,7 @@ const clearMealHistory = async (req, res) => {
     }
 
     const result = await Meal.deleteMany({});
-    console.log(`Cleared ${result.deletedCount} meals from history`);
+    // History cleared successfully
     
     res.json({ 
       message: "History cleared successfully",

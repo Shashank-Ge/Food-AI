@@ -1,3 +1,5 @@
+import { API_BASE_URL } from '../config';
+
 // I separate history management to keep the main app cleaner
 const MealHistory = ({ history, onClearHistory }) => {
   const handleClearHistory = async () => {
@@ -5,7 +7,7 @@ const MealHistory = ({ history, onClearHistory }) => {
     if (!confirmClear) return;
     
     try {
-      const res = await fetch("http://localhost:5000/history", {
+      const res = await fetch(`${API_BASE_URL}/history`, {
         method: 'DELETE'
       });
 

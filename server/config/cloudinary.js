@@ -8,12 +8,7 @@ const initializeCloudinary = () => {
     api_secret: process.env.CLOUDINARY_API_SECRET
   };
 
-  // Log config status for debugging (without exposing secrets)
-  console.log('Cloudinary config:', {
-    cloud: config.cloud_name || 'MISSING',
-    key: config.api_key ? 'SET' : 'MISSING',
-    secret: config.api_secret ? 'SET' : 'MISSING'
-  });
+  // Cloudinary configuration loaded
 
   cloudinary.config(config);
   return cloudinary;

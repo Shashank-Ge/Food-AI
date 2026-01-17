@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_BASE_URL } from '../config';
 
 // I extract the upload logic to keep App.js focused on orchestration
 const ImageUpload = ({ onAnalysisComplete, onError, onFileSelect }) => {
@@ -26,13 +27,13 @@ const ImageUpload = ({ onAnalysisComplete, onError, onFileSelect }) => {
       const formData = new FormData();
       formData.append('image', file);
 
-      const res = await fetch('http://localhost:5000/upload', {
+      const res = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
         body: formData,
       });
 
       const data = await res.json();
-      console.log("Upload response:", data);
+      // Upload response received
 
       if (!res.ok) {
         throw new Error(data.error || 'Upload failed');

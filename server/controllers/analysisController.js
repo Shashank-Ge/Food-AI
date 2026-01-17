@@ -35,8 +35,7 @@ const processImageAnalysis = async (imageBuffer, filename, sourceUrl = null) => 
 const analyzeImageFromUrl = async (req, res) => {
   try {
     const { imageUrl } = req.body;
-    console.log("=== URL Analysis Request ===");
-    console.log("Received URL:", imageUrl);
+    // URL analysis request received
 
     if (!imageUrl) {
       return res.status(400).json({ error: "No image URL provided" });
@@ -58,10 +57,7 @@ const analyzeImageFromUrl = async (req, res) => {
       imageBuffer = Buffer.from(response.data);
       contentType = response.headers['content-type'];
 
-      console.log("Downloaded image:", {
-        size: imageBuffer.length,
-        type: contentType
-      });
+      // Image downloaded successfully
 
       // Validate it's actually an image
       if (!contentType || !contentType.startsWith('image/')) {
@@ -110,12 +106,7 @@ const analyzeUploadedImage = async (req, res) => {
       return res.status(400).json({ error: "No file uploaded" });
     }
 
-    console.log("=== File Upload Analysis ===");
-    console.log("File received:", {
-      filename: req.file.originalname,
-      size: req.file.size,
-      mimetype: req.file.mimetype
-    });
+    // File upload analysis request
 
     // Process the analysis
     const result = await processImageAnalysis(
@@ -137,7 +128,7 @@ const analyzeUploadedImage = async (req, res) => {
 // I keep database operations separate and async to not block responses
 const saveMealToDatabase = async (analysis, filename, size, imageUrl, sourceUrl = null) => {
   if (mongoose.connection.readyState !== 1) {
-    console.log("MongoDB not connected - skipping save");
+    // MongoDB not connected - skipping save
     return;
   }
 
@@ -157,7 +148,7 @@ const saveMealToDatabase = async (analysis, filename, size, imageUrl, sourceUrl 
     }
 
     const saved = await Meal.create(mealData);
-    console.log("Meal saved to MongoDB:", saved._id);
+    // Meal saved successfully
   } catch (err) {
     console.error("MongoDB save error (non-critical):", err.message);
   }

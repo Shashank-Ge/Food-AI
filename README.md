@@ -1,119 +1,96 @@
-# AI Nutrition Analysis Platform
+# AI Food Analysis Platform
 
-A production-ready React + Node.js application that analyzes food images using AI to provide nutritional insights and recommendations.
+A full-stack web application that analyzes food images using AI to provide nutritional insights and meal recommendations.
 
-## Features
+## What it does
 
-- **Image Upload Analysis**: Upload food images for AI-powered nutritional analysis
-- **URL Analysis**: Analyze food images directly from URLs
-- **Real-time Results**: Get instant AI-generated health ratings and recommendations
-- **Meal History**: Track and review previous analyses
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+- Upload food images or paste image URLs for analysis
+- AI-powered food identification with health ratings and reasoning
+- Real-time image preview with analysis progress indicators
+- Persistent history of past analyses with clear functionality
+- Responsive design that works across devices
 
 ## Tech Stack
 
-**Frontend:**
-- React 18 with Hooks
-- Modern CSS with CSS Grid/Flexbox
-- Responsive design with mobile-first approach
+**Frontend:** React, modern CSS, responsive UI  
+**Backend:** Node.js, Express, MongoDB (Mongoose)  
+**External Services:** Groq API (AI analysis), Cloudinary (image storage)
 
-**Backend:**
-- Node.js with Express
-- MongoDB for data persistence
-- Cloudinary for image storage
-- Groq AI for food analysis
-- Sharp for image processing
+## Architecture
 
-## Project Structure
+The application follows a standard client-server architecture. Users upload images or provide URLs through the React frontend. The Express backend processes requests, downloads/validates images, uploads them to Cloudinary for storage, sends them to Groq's vision API for analysis, and stores results in MongoDB. The frontend displays analysis results and maintains a history panel.
 
-```
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── hooks/          # Custom React hooks
-│   │   ├── App.js          # Main app component
-│   │   └── App.css         # Styles
-│   └── public/
-├── server/                 # Node.js backend
-│   ├── config/             # Configuration files
-│   ├── controllers/        # Business logic
-│   ├── models/             # Database models
-│   ├── routes/             # API routes
-│   ├── services/           # External service integrations
-│   └── index.js            # Server entry point
-└── README.md
+## Local Setup
+
+### Backend Setup
+
+1. Navigate to server directory and install dependencies:
+```bash
+cd server
+npm install
 ```
 
-## Setup & Installation
-
-### Prerequisites
-- Node.js 16+
-- MongoDB
-- Cloudinary account
-- Groq API key
-
-### Environment Variables
-
-Create a `.env` file in the server directory:
-
-```env
-PORT=5000
-NODE_ENV=development
-MONGO_URI=your_mongodb_connection_string
-GROQ_API_KEY=your_groq_api_key
-CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-CLOUDINARY_API_KEY=your_cloudinary_api_key
-CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+2. Copy environment template and add your credentials:
+```bash
+cp .env.example .env
+# Edit .env with your actual API keys and database URL
 ```
 
-### Installation
+3. Start the server:
+```bash
+npm start
+```
 
-1. **Install backend dependencies:**
-   ```bash
-   cd server
-   npm install
-   ```
+Server runs on port 5000 by default.
 
-2. **Install frontend dependencies:**
-   ```bash
-   cd client
-   npm install
-   ```
+### Frontend Setup
 
-3. **Start the development servers:**
-   
-   Backend (from server directory):
-   ```bash
-   npm start
-   ```
-   
-   Frontend (from client directory):
-   ```bash
-   npm start
-   ```
+1. Navigate to client directory and install dependencies:
+```bash
+cd client
+npm install
+```
+
+2. Start the development server:
+```bash
+npm start
+```
+
+Frontend runs on port 3000 and proxies API calls to the backend.
+
+## Environment Variables
+
+**Backend (.env file required):**
+- `GROQ_API_KEY`
+- `MONGO_URI` 
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+- `PORT` (optional, defaults to 5000)
+- `NODE_ENV` (optional, defaults to development)
+
+**Frontend (optional):**
+- `REACT_APP_API_URL` (defaults to http://localhost:5000 in development)
 
 ## API Endpoints
 
-- `POST /upload` - Upload and analyze food image
-- `POST /analyze-url` - Analyze food image from URL
-- `GET /history` - Get meal analysis history
-- `DELETE /history` - Clear meal history
 - `GET /` - Health check
+- `POST /upload` - Analyze uploaded image file
+- `POST /analyze-url` - Analyze image from URL
+- `GET /history` - Retrieve analysis history
+- `DELETE /history` - Clear all history
 
 ## Deployment
 
-The application is structured for easy deployment to platforms like:
-- **Frontend**: Vercel, Netlify, or any static hosting
-- **Backend**: Railway, Render, Heroku, or any Node.js hosting
-- **Database**: MongoDB Atlas or any MongoDB hosting
+**Backend:** Deploy to Render, Railway, or similar. Set environment variables and use `npm start` as the start command.
 
-## Development Notes
+**Frontend:** Deploy to Vercel, Netlify, or similar. Build command is `npm run build`, output directory is `build`. Set `REACT_APP_API_URL` to your backend URL.
 
-- The app works without database connection (analysis still functions)
-- Cloudinary is optional - the app gracefully handles upload failures
-- All external service failures are handled gracefully
-- The frontend is fully responsive and works offline for UI interactions
+## Demo
 
-## License
+Live demo: [Add your deployed URL here]  
+Backend API: [Add your backend URL here]
 
-MIT License - feel free to use this project as a starting point for your own applications.
+## Notes
+
+The application gracefully handles network failures and invalid URLs by suggesting users switch to file upload mode. MongoDB connection is optional - the app continues to work for analysis even if the database is unavailable (history features will be disabled).
