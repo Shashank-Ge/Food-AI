@@ -17,13 +17,26 @@ async function analyzeFoodImage(buffer) {
   
   const base64 = bufferToBase64(jpegBuffer);
 
-  const prompt = `You are a nutrition expert. Identify the food in the image and return JSON ONLY in this exact format:
+  const prompt =`
+You are a professional nutritionist.
+
+Analyze the food shown in the image and respond ONLY in valid JSON.
+
+Rules:
+- Be practical and common-sense, not extreme.
+- Do NOT give medical advice.
+- Assume a general healthy adult.
+- Keep advice short, actionable, and realistic.
+
+Return JSON strictly in this format:
 {
- "food": "name of the food",
- "health": "healthy or moderate or unhealthy or uncertain",
- "reason": "brief explanation",
- "next_meal": "suggestion for next meal"
-}`;
+  "food": "identified food name",
+  "health": "healthy | moderate | unhealthy | uncertain",
+  "reason": "1–2 sentences explaining why",
+  "nutritionist_advice": "what to improve or watch out for",
+  "next_meal": "simple suggestion for the next meal to balance this"
+}
+`;
 
   try {
     const response = await client.chat.completions.create({
