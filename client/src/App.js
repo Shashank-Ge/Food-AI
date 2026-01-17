@@ -183,18 +183,22 @@ function App () {
           <div className="input-section">
             {analysisMode === 'upload' ? (
               <div>
+                <div className="input-section-header">
+                  <h3 className="input-section-title">Upload Image</h3>
+                  <p className="input-section-subtitle">Select a food image from your device</p>
+                </div>
                 <div 
                   className={`dropzone ${file ? 'active' : ''}`}
                   onClick={() => document.getElementById('file-input').click()}
                 >
                   <div className="dropzone-icon">
-                    📁
+                    {file ? '✓' : '📁'}
                   </div>
                   <h3 className="dropzone-title">
-                    {file ? file.name : 'Select Image File'}
+                    {file ? file.name : 'Choose Image File'}
                   </h3>
                   <p className="dropzone-subtitle">
-                    {file ? 'Click to change file' : 'Click to browse or drag and drop'}
+                    {file ? 'Click to select a different file' : 'Click to browse files or drag and drop'}
                   </p>
                   <input
                     id="file-input"
@@ -210,33 +214,42 @@ function App () {
               </div>
             ) : (
               <div>
-                <input
-                  type="url"
-                  placeholder="https://example.com/image.jpg"
-                  value={imageUrl}
-                  onChange={(e) => {
-                    setImageUrl(e.target.value)
-                    if (e.target.value.trim()) {
-                      // Basic URL validation
-                      try {
-                        new URL(e.target.value.trim())
-                        setPreviewUrl(e.target.value.trim())
-                        setError(null)
-                      } catch {
-                        setPreviewUrl(null)
-                        if (e.target.value.trim()) {
-                          setError("Please enter a valid URL")
+                <div className="input-section-header">
+                  <h3 className="input-section-title">Analyze Image URL</h3>
+                  <p className="input-section-subtitle">Enter a direct link to an image file</p>
+                </div>
+                <div className="url-input-container">
+                  <input
+                    type="url"
+                    placeholder="https://example.com/image.jpg"
+                    value={imageUrl}
+                    onChange={(e) => {
+                      setImageUrl(e.target.value)
+                      if (e.target.value.trim()) {
+                        // Basic URL validation
+                        try {
+                          new URL(e.target.value.trim())
+                          setPreviewUrl(e.target.value.trim())
+                          setError(null)
+                        } catch {
+                          setPreviewUrl(null)
+                          if (e.target.value.trim()) {
+                            setError("Please enter a valid URL")
+                          }
                         }
+                      } else {
+                        setPreviewUrl(null)
+                        setError(null)
                       }
-                    } else {
-                      setPreviewUrl(null)
-                      setError(null)
-                    }
-                  }}
-                  className={`url-input ${error && imageUrl.trim() ? 'error' : ''}`}
-                />
+                    }}
+                    className={`url-input ${error && imageUrl.trim() ? 'error' : ''}`}
+                  />
+                </div>
                 {imageUrl.trim() && !error && (
-                  <p className="input-success">✓ Valid URL format detected</p>
+                  <p className="input-success">
+                    <span>✓</span>
+                    <span>Valid URL format detected</span>
+                  </p>
                 )}
                 <p className="input-hint">
                   Direct image URLs • JPG, PNG, GIF, WebP • Maximum 10MB
@@ -271,14 +284,16 @@ function App () {
               </div>
             )}
 
-            <button 
-              onClick={analysisMode === 'upload' ? handleUpload : handleUrlAnalysis} 
-              disabled={loading || (analysisMode === 'upload' ? !file : !imageUrl.trim())}
-              className="action-button primary"
-              style={{ marginTop: '2rem', width: '100%' }}
-            >
-              {loading ? 'Processing Analysis...' : 'Run AI Analysis'}
-            </button>
+            <div className="action-button-group">
+              <button 
+                onClick={analysisMode === 'upload' ? handleUpload : handleUrlAnalysis} 
+                disabled={loading || (analysisMode === 'upload' ? !file : !imageUrl.trim())}
+                className="action-button primary"
+                style={{ width: '100%' }}
+              >
+                {loading ? 'Processing Analysis...' : 'Run AI Analysis'}
+              </button>
+            </div>
           </div>
 
           {/* Image Preview - Hero Element */}
