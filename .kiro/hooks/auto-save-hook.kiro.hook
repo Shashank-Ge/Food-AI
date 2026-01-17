@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Auto Save on Edit",
+  "description": "Automatically saves files when they are edited to prevent data loss",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "*"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Save the current file automatically"
+  }
+}

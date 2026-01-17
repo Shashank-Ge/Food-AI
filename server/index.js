@@ -8,6 +8,7 @@ const mongoose = require('mongoose')
 const uploadRoutes = require('./routes/upload')
 const historyRoutes = require('./routes/history')
 const testRoutes = require('./routes/test')
+const urlAnalysisRoutes = require('./routes/url-analysis')
 
 mongoose.connect(process.env.MONGO_URI, {
   serverSelectionTimeoutMS: 5000, // Timeout after 5s not 30s
@@ -27,5 +28,6 @@ app.use(express.json())
 app.use('/', testRoutes)
 app.use('/upload', uploadRoutes)
 app.use('/history', historyRoutes)
+app.use('/analyze-url', urlAnalysisRoutes)
 
 app.listen(5000, () => console.log('Server running on port 5000'))
