@@ -53,6 +53,7 @@ const useAnalysis = () => {
     setError(null);
     setResponse(null);
     
+    // Only set preview URL if one is provided
     if (imageUrl) {
       setPreviewUrl(imageUrl);
     }
@@ -71,6 +72,14 @@ const useAnalysis = () => {
     setIsAnalyzing(false);
   };
 
+  // Set preview URL without starting analysis
+  const setPreviewUrlOnly = (url) => {
+    setPreviewUrl(url);
+    setIsAnalyzing(false);
+    setError(null);
+    setResponse(null);
+  };
+
   return {
     // State
     response,
@@ -83,6 +92,7 @@ const useAnalysis = () => {
     handleAnalysisComplete,
     handleAnalysisError,
     startAnalysis,
+    setPreviewUrlOnly,
     clearHistory,
     resetAnalysis,
     loadHistory

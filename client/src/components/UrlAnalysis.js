@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { API_BASE_URL } from '../config';
 
 // I separate URL analysis to keep the logic focused and reusable
-const UrlAnalysis = ({ onAnalysisComplete, onError, onUrlChange }) => {
+const UrlAnalysis = ({ onAnalysisComplete, onError, onUrlChange, onAnalysisStart }) => {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [validUrl, setValidUrl] = useState(false);
@@ -42,6 +42,11 @@ const UrlAnalysis = ({ onAnalysisComplete, onError, onUrlChange }) => {
 
     setLoading(true);
     onError(null);
+    
+    // Start the analysis animation
+    if (onAnalysisStart) {
+      onAnalysisStart();
+    }
 
     try {
       const res = await fetch(`${API_BASE_URL}/analyze-url`, {

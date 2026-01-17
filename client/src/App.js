@@ -24,6 +24,7 @@ function App() {
     handleAnalysisComplete,
     handleAnalysisError,
     startAnalysis,
+    setPreviewUrlOnly,
     clearHistory,
     resetAnalysis
   } = useAnalysis();
@@ -69,10 +70,12 @@ function App() {
               <ImageUpload 
                 onAnalysisComplete={handleAnalysisComplete}
                 onError={handleAnalysisError}
+                onAnalysisStart={() => startAnalysis()}
                 onFileSelect={(file) => {
                   if (file) {
                     const objectUrl = URL.createObjectURL(file);
-                    startAnalysis(objectUrl);
+                    // Just set preview, don't start analysis yet
+                    setPreviewUrlOnly(objectUrl);
                   }
                 }}
               />
@@ -80,9 +83,11 @@ function App() {
               <UrlAnalysis 
                 onAnalysisComplete={handleAnalysisComplete}
                 onError={handleAnalysisError}
+                onAnalysisStart={() => startAnalysis()}
                 onUrlChange={(url) => {
                   if (url) {
-                    startAnalysis(url);
+                    // Just set preview, don't start analysis yet
+                    setPreviewUrlOnly(url);
                   } else {
                     resetAnalysis();
                   }

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { API_BASE_URL } from '../config';
 
 // I extract the upload logic to keep App.js focused on orchestration
-const ImageUpload = ({ onAnalysisComplete, onError, onFileSelect }) => {
+const ImageUpload = ({ onAnalysisComplete, onError, onFileSelect, onAnalysisStart }) => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -22,6 +22,11 @@ const ImageUpload = ({ onAnalysisComplete, onError, onFileSelect }) => {
 
     setLoading(true);
     onError(null); // Clear any previous errors
+    
+    // Start the analysis animation
+    if (onAnalysisStart) {
+      onAnalysisStart();
+    }
 
     try {
       const formData = new FormData();
