@@ -89,8 +89,8 @@ Frontend runs on port 3000 and proxies API calls to the backend.
 ## Demo
 
 Live demo: [Add your deployed URL here]  
-Backend API: https://food-ai-backend-sxha.onrender.com
-Frontend link : https://food-ai-analysis.vercel.app
+Backend API: https://food-ai-backend-sxha.onrender.com    
+Frontend link: https://food-ai-analysis.vercel.app
 
 ## Notes
 
