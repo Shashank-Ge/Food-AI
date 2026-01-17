@@ -1,5 +1,5 @@
 # AI Food Analysis Platform
-![alt text](image.png)
+![alt text](./Gallery/image.png)
 A full-stack web application that analyzes food images using AI to provide nutritional insights and meal recommendations.
 
 ## What it does
