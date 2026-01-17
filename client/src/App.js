@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import './App.css'
 
 function App () {
   const [file , setFile] = useState (null)
@@ -142,487 +143,314 @@ function App () {
     loadHistory();
   }, [])
 
+  const handleFileSelect = (selectedFile) => {
+    setFile(selectedFile)
+    if (selectedFile) {
+      setPreviewUrl(URL.createObjectURL(selectedFile))
+    }
+  }
+
   return (
-    <div style = {{ padding : '20px', fontFamily: 'Arial, sans-serif', maxWidth: '800px', margin: '0 auto' }}>
-      <h2> AI Nutrition Analysis </h2>
+    <div className="app-container">
+      {/* Header */}
+      <header className="app-header">
+        <h1 className="app-title">Nutrition Intelligence Platform</h1>
+        <p className="app-subtitle">Advanced AI-powered food analysis and nutritional assessment</p>
+      </header>
 
-      {/* Mode Selection */}
-      <div style={{ marginBottom: '20px', display: 'flex', gap: '10px' }}>
-        <button
-          onClick={() => switchMode('upload')}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: analysisMode === 'upload' ? '#007bff' : '#f8f9fa',
-            color: analysisMode === 'upload' ? 'white' : '#333',
-            border: '2px solid #007bff',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          📁 Upload Image
-        </button>
-        <button
-          onClick={() => switchMode('url')}
-          style={{
-            padding: '10px 20px',
-            backgroundColor: analysisMode === 'url' ? '#007bff' : '#f8f9fa',
-            color: analysisMode === 'url' ? 'white' : '#333',
-            border: '2px solid #007bff',
-            borderRadius: '8px',
-            cursor: 'pointer',
-            fontWeight: 'bold'
-          }}
-        >
-          🌐 Analyze URL
-        </button>
-      </div>
-
-      {/* Upload Mode */}
-      {analysisMode === 'upload' && (
-        <div style={{ marginBottom: '15px' }}>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => {
-              const selectedFile = e.target.files[0]
-              setFile(selectedFile)
-              if (selectedFile) {
-                setPreviewUrl(URL.createObjectURL(selectedFile))
-              }
-            }}
-            style={{
-              padding: '10px',
-              border: '2px dashed #007bff',
-              borderRadius: '8px',
-              width: '100%',
-              maxWidth: '500px'
-            }}
-          />
-        </div>
-      )}
-
-      {/* URL Mode */}
-      {analysisMode === 'url' && (
-        <div style={{ marginBottom: '15px' }}>
-          <input
-            type="url"
-            placeholder="Paste image URL here (e.g., https://example.com/image.jpg)"
-            value={imageUrl}
-            onChange={(e) => {
-              setImageUrl(e.target.value)
-              if (e.target.value.trim()) {
-                // Basic URL validation
-                try {
-                  new URL(e.target.value.trim())
-                  setPreviewUrl(e.target.value.trim())
-                  setError(null)
-                } catch {
-                  setPreviewUrl(null)
-                  if (e.target.value.trim()) {
-                    setError("Please enter a valid URL")
-                  }
-                }
-              } else {
-                setPreviewUrl(null)
-                setError(null)
-              }
-            }}
-            style={{
-              padding: '12px',
-              border: `2px solid ${error && imageUrl.trim() ? '#dc3545' : '#007bff'}`,
-              borderRadius: '8px',
-              width: '100%',
-              maxWidth: '500px',
-              fontSize: '14px'
-            }}
-          />
-          {imageUrl.trim() && !error && (
-            <small style={{ color: '#28a745', display: 'block', marginTop: '5px' }}>
-              ✓ Valid URL format
-            </small>
-          )}
-          <small style={{ color: '#666', display: 'block', marginTop: '5px' }}>
-            Supports JPG, PNG, GIF, WebP images up to 10MB
-          </small>
-          <details style={{ marginTop: '10px' }}>
-            <summary style={{ cursor: 'pointer', color: '#007bff', fontSize: '14px' }}>
-              💡 Need example URLs? Click here
-            </summary>
-            <div style={{ marginTop: '8px', fontSize: '13px', color: '#666' }}>
-              <p>Try these working examples:</p>
-              <div style={{ fontFamily: 'monospace', backgroundColor: '#f8f9fa', padding: '8px', borderRadius: '4px', marginTop: '5px' }}>
-                <div style={{ marginBottom: '4px' }}>
-                  <button 
-                    onClick={() => setImageUrl('https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500')}
-                    style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', textDecoration: 'underline', fontSize: '12px' }}
-                  >
-                    Coffee Latte (Unsplash)
-                  </button>
-                </div>
-                <div style={{ marginBottom: '4px' }}>
-                  <button 
-                    onClick={() => setImageUrl('https://images.unsplash.com/photo-1546793665-c74683f339c1?w=500')}
-                    style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', textDecoration: 'underline', fontSize: '12px' }}
-                  >
-                    Salad (Unsplash)
-                  </button>
-                </div>
-                <div>
-                  <button 
-                    onClick={() => setImageUrl('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500')}
-                    style={{ background: 'none', border: 'none', color: '#007bff', cursor: 'pointer', textDecoration: 'underline', fontSize: '12px' }}
-                  >
-                    Burger (Unsplash)
-                  </button>
-                </div>
-              </div>
+      <div className="main-grid">
+        {/* Main Content Panel */}
+        <div className="content-panel">
+          {/* Mode Selection */}
+          <div style={{ padding: '2rem 2rem 0' }}>
+            <div className="mode-selector">
+              <button
+                onClick={() => switchMode('upload')}
+                className={`mode-button ${analysisMode === 'upload' ? 'active' : ''}`}
+              >
+                Upload Image
+              </button>
+              <button
+                onClick={() => switchMode('url')}
+                className={`mode-button ${analysisMode === 'url' ? 'active' : ''}`}
+              >
+                Analyze URL
+              </button>
             </div>
-          </details>
-        </div>
-      )}
-
-      {previewUrl && (
-        <div
-          style={{
-            position: "relative",
-            marginTop: "20px",
-            maxWidth: "400px"
-          }}
-        >
-          <img
-            src={previewUrl}
-            alt="preview"
-            style={{
-              width: "100%",
-              borderRadius: "12px",
-              border: "1px solid #ddd"
-            }}
-          />
-          
-          {isAnalyzing && (
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                backgroundColor: "rgba(0,0,0,0.7)",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                color: "white",
-                borderRadius: "12px"
-              }}
-            >
-              {/* Scanning lines */}
-              <div className="scan-line" />
-              <div className="scan-line-2" />
-              
-              {/* Central AI icon with pulse */}
-              <div className="ai-scanner">
-                <div className="ai-core">
-                  <div className="ai-pulse" />
-                  <div className="ai-pulse-2" />
-                  🤖
-                </div>
-              </div>
-              
-              {/* Progress dots */}
-              <div className="progress-dots">
-                <div className="dot"></div>
-                <div className="dot"></div>
-                <div className="dot"></div>
-              </div>
-              
-              <p style={{ 
-                marginTop: "15px", 
-                fontSize: "16px", 
-                fontWeight: "bold",
-                textShadow: "0 0 10px rgba(0,255,255,0.5)"
-              }}>
-                AI ANALYZING...
-              </p>
-            </div>
-          )}
-        </div>
-      )}
-
-      <button 
-        onClick={analysisMode === 'upload' ? handleUpload : handleUrlAnalysis} 
-        disabled={loading || (analysisMode === 'upload' ? !file : !imageUrl.trim())}
-        style={{
-          padding: '12px 30px',
-          backgroundColor: loading ? '#ccc' : '#28a745',
-          color: 'white',
-          border: 'none',
-          borderRadius: '8px',
-          cursor: loading ? 'not-allowed' : 'pointer',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          transition: 'background-color 0.3s',
-          marginTop: '15px'
-        }}
-      >
-        {loading ? ' Analyzing...' : 
-         analysisMode === 'upload' ? 'Upload & Analyze' : 'Analyze URL'}
-      </button>
-
-      {error && (
-        <div style={{ marginTop: '20px', color: 'red', backgroundColor: '#fff5f5', padding: '15px', borderRadius: '8px', border: '1px solid #fed7d7' }}>
-          <p><strong>Error:</strong> {error}</p>
-          {(error.includes('URL') || error.includes('Network') || error.includes('connectivity')) && (
-            <div style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
-              <p><strong>💡 Recommended solution:</strong></p>
-              <div style={{ backgroundColor: '#e8f4fd', padding: '10px', borderRadius: '6px', marginTop: '8px' }}>
-                <p style={{ margin: '0 0 8px 0', fontWeight: 'bold', color: '#1976d2' }}>
-                  Use "📁 Upload Image" instead
-                </p>
-                <p style={{ margin: 0, fontSize: '13px' }}>
-                  Right-click the image → "Save image as..." → Upload the saved file. 
-                  This works 100% of the time and gives the same AI analysis results.
-                </p>
-              </div>
-              <details style={{ marginTop: '10px' }}>
-                <summary style={{ cursor: 'pointer', color: '#007bff', fontSize: '13px' }}>
-                  Why URL analysis might fail
-                </summary>
-                <ul style={{ margin: '5px 0', paddingLeft: '20px', fontSize: '12px' }}>
-                  <li>Website blocks server requests (CORS policy)</li>
-                  <li>Network connectivity issues</li>
-                  <li>URL points to a webpage, not direct image</li>
-                  <li>Image requires authentication or cookies</li>
-                </ul>
-              </details>
-            </div>
-          )}
-        </div>
-      )}
-
-      {response && (
-        <div style = {{marginTop : '20px', border: '1px solid #ddd', padding: '15px', borderRadius: '8px'}}>
-          <p><strong>Status:</strong> {response.message} </p>
-          <p><strong>Source:</strong> {response.filename || (response.source_url ? `URL: ${response.source_url}` : 'Unknown')} </p>
-          <p><strong>Size:</strong> {response.size} bytes </p>
-
-        {response.analysis && (
-          <div style={{ marginTop: '15px', backgroundColor: '#f5f5f5', padding: '15px', borderRadius: '5px' }}>
-            <h3>AI Analysis</h3>
-            <p><strong>Food Identified:</strong> {response.analysis.food}</p>
-            <p><strong>Health Rating:</strong> <span style={{
-              color: response.analysis.health === 'healthy' ? 'green' :
-                     response.analysis.health === 'unhealthy' ? 'red' : 'orange'
-            }}>{response.analysis.health}</span></p>
-            <p><strong>Reason:</strong> {response.analysis.reason}</p>
-            <p><strong>Next Meal Suggestion:</strong> {response.analysis.next_meal}</p>
-            {response.source_url && (
-              <p><strong>Source URL:</strong> <a href={response.source_url} target="_blank" rel="noopener noreferrer" style={{color: '#007bff', wordBreak: 'break-all'}}>View Original</a></p>
-            )}
           </div>
-        )}
 
-        </div>
-      )}
-
-      {/* history div */}
-      <div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '30px' }}>
-          <h3 style={{ margin: 0 }}> Recent Meals </h3>
-          {history.length > 0 && (
-            <button 
-              onClick={clearHistory}
-              style={{
-                padding: '8px 16px',
-                backgroundColor: '#dc3545',
-                color: 'white',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer',
-                fontSize: '14px'
-              }}
-            >
-              Clear History
-            </button>
-          )}
-        </div>
-
-        {history.length === 0 && <p> No Meals yet </p> }
-        
-        <ul>
-          {history.map((meal) => (
-            <li
-              key={meal._id}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "12px",
-                marginBottom: "12px",
-                padding: "8px",
-                border: "1px solid #ddd",
-                borderRadius: "8px"
-              }}
-            >
-              {meal.image_url && (
-                <img
-                  src={meal.image_url}
-                  alt={meal.food}
-                  width="80"
-                  height="80"
-                  style={{objectFit: "cover", borderRadius: "6px"}}
-                />
-              )}
-
+          {/* Input Section */}
+          <div className="input-section">
+            {analysisMode === 'upload' ? (
               <div>
-                <div><strong>{meal.food}</strong></div>
-                <div style={{ color: 
-                  meal.health === "healthy" ? "green" :
-                  meal.health === "unhealthy" ? "red" : "orange" 
-                }}>
-                  {meal.health}
-                </div>
-                <small>{new Date(meal.created_at).toLocaleString()}</small>
-                {meal.source_url ? (
-                  <div>
-                    <small style={{color: '#007bff'}}>🌐 From URL</small>
-                    <div style={{fontSize: '11px', color: '#666', marginTop: '2px', wordBreak: 'break-all'}}>
-                      {meal.source_url.length > 50 ? meal.source_url.substring(0, 50) + '...' : meal.source_url}
-                    </div>
+                <div 
+                  className={`dropzone ${file ? 'active' : ''}`}
+                  onClick={() => document.getElementById('file-input').click()}
+                >
+                  <div className="dropzone-icon">
+                    📁
                   </div>
-                ) : (
-                  <div>
-                    <small style={{color: '#28a745'}}>📁 Uploaded file</small>
+                  <h3 className="dropzone-title">
+                    {file ? file.name : 'Select Image File'}
+                  </h3>
+                  <p className="dropzone-subtitle">
+                    {file ? 'Click to change file' : 'Click to browse or drag and drop'}
+                  </p>
+                  <input
+                    id="file-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleFileSelect(e.target.files[0])}
+                    className="file-input-hidden"
+                  />
+                </div>
+                <p className="input-hint">
+                  Supports JPG, PNG, GIF, WebP • Maximum 10MB
+                </p>
+              </div>
+            ) : (
+              <div>
+                <input
+                  type="url"
+                  placeholder="https://example.com/image.jpg"
+                  value={imageUrl}
+                  onChange={(e) => {
+                    setImageUrl(e.target.value)
+                    if (e.target.value.trim()) {
+                      // Basic URL validation
+                      try {
+                        new URL(e.target.value.trim())
+                        setPreviewUrl(e.target.value.trim())
+                        setError(null)
+                      } catch {
+                        setPreviewUrl(null)
+                        if (e.target.value.trim()) {
+                          setError("Please enter a valid URL")
+                        }
+                      }
+                    } else {
+                      setPreviewUrl(null)
+                      setError(null)
+                    }
+                  }}
+                  className={`url-input ${error && imageUrl.trim() ? 'error' : ''}`}
+                />
+                {imageUrl.trim() && !error && (
+                  <p className="input-success">✓ Valid URL format detected</p>
+                )}
+                <p className="input-hint">
+                  Direct image URLs • JPG, PNG, GIF, WebP • Maximum 10MB
+                </p>
+                
+                <details className="example-urls">
+                  <summary>View example URLs</summary>
+                  <div className="example-urls-content">
+                    <p style={{ margin: '0 0 0.75rem 0', fontSize: '0.75rem', color: 'var(--color-text-secondary)' }}>
+                      Test with these verified image URLs:
+                    </p>
+                    <button 
+                      onClick={() => setImageUrl('https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500')}
+                      className="example-url-button"
+                    >
+                      Coffee Latte Sample
+                    </button>
+                    <button 
+                      onClick={() => setImageUrl('https://images.unsplash.com/photo-1546793665-c74683f339c1?w=500')}
+                      className="example-url-button"
+                    >
+                      Fresh Salad Sample
+                    </button>
+                    <button 
+                      onClick={() => setImageUrl('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500')}
+                      className="example-url-button"
+                    >
+                      Burger Sample
+                    </button>
+                  </div>
+                </details>
+              </div>
+            )}
+
+            <button 
+              onClick={analysisMode === 'upload' ? handleUpload : handleUrlAnalysis} 
+              disabled={loading || (analysisMode === 'upload' ? !file : !imageUrl.trim())}
+              className="action-button primary"
+              style={{ marginTop: '2rem', width: '100%' }}
+            >
+              {loading ? 'Processing Analysis...' : 'Run AI Analysis'}
+            </button>
+          </div>
+
+          {/* Image Preview - Hero Element */}
+          {previewUrl && (
+            <div className="image-preview-container">
+              <div className="image-preview-wrapper">
+                <img
+                  src={previewUrl}
+                  alt="Food analysis subject"
+                  className="image-preview"
+                />
+                
+                {isAnalyzing && (
+                  <div className="analyzing-overlay">
+                    <div className="analyzing-content">
+                      <div className="analyzing-spinner"></div>
+                      <p className="analyzing-text">PROCESSING IMAGE</p>
+                      <p className="analyzing-subtext">AI models analyzing nutritional content...</p>
+                    </div>
                   </div>
                 )}
               </div>
-            </li>
-          ))}
-        </ul>
+            </div>
+          )}
+
+          {/* Error Display */}
+          {error && (
+            <div style={{ padding: '0 2rem 2rem' }}>
+              <div className="error-container">
+                <h4 className="error-title">Analysis Error</h4>
+                <p className="error-message">{error}</p>
+                {(error.includes('URL') || error.includes('Network') || error.includes('connectivity')) && (
+                  <div className="error-solution">
+                    <p className="error-solution-title">Recommended Solution</p>
+                    <p className="error-solution-text">
+                      Switch to "Upload Image" mode. Save the image locally, then upload the file directly. 
+                      This method provides 100% reliability and identical analysis results.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Results Display */}
+          {response && (
+            <div className="results-container">
+              <h3 className="results-header">Analysis Complete</h3>
+              
+              <div className="results-meta">
+                <div className="meta-item">
+                  <div className="meta-label">Status</div>
+                  <div className="meta-value">{response.message}</div>
+                </div>
+                <div className="meta-item">
+                  <div className="meta-label">Source</div>
+                  <div className="meta-value">
+                    {response.filename || (response.source_url ? 'URL Analysis' : 'Unknown')}
+                  </div>
+                </div>
+                <div className="meta-item">
+                  <div className="meta-label">File Size</div>
+                  <div className="meta-value">{Math.round(response.size / 1024)} KB</div>
+                </div>
+              </div>
+
+              {response.analysis && (
+                <div className="analysis-container">
+                  <h4 className="analysis-title">Nutritional Assessment</h4>
+                  <div className="analysis-grid">
+                    <div className="analysis-item">
+                      <span className="analysis-label">Food Item</span>
+                      <span className="analysis-value">{response.analysis.food}</span>
+                    </div>
+                    <div className="analysis-item">
+                      <span className="analysis-label">Health Rating</span>
+                      <span className={`health-badge ${response.analysis.health}`}>
+                        {response.analysis.health}
+                      </span>
+                    </div>
+                    <div className="analysis-item">
+                      <span className="analysis-label">Assessment</span>
+                      <span className="analysis-value">{response.analysis.reason}</span>
+                    </div>
+                    <div className="analysis-item">
+                      <span className="analysis-label">Recommendation</span>
+                      <span className="analysis-value">{response.analysis.next_meal}</span>
+                    </div>
+                    {response.source_url && (
+                      <div className="analysis-item">
+                        <span className="analysis-label">Source</span>
+                        <a 
+                          href={response.source_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="analysis-value"
+                          style={{ color: 'var(--color-accent)', textDecoration: 'none' }}
+                        >
+                          View Original Image →
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Sidebar Panel - History */}
+        <div className="sidebar-panel">
+          <div className="history-section">
+            <div className="history-header">
+              <h3 className="history-title">Analysis History</h3>
+              {history.length > 0 && (
+                <button 
+                  onClick={clearHistory}
+                  className="action-button danger"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
+            {history.length === 0 ? (
+              <div className="empty-state">
+                <p className="empty-state-text">No analysis history yet</p>
+              </div>
+            ) : (
+              <ul className="history-list">
+                {history.map((meal) => (
+                  <li key={meal._id} className="history-item">
+                    {meal.image_url && (
+                      <img
+                        src={meal.image_url}
+                        alt={meal.food}
+                        className="history-image"
+                      />
+                    )}
+                    <div className="history-content">
+                      <h4 className="history-food">{meal.food}</h4>
+                      <p className="history-date">
+                        {new Date(meal.created_at).toLocaleDateString()} {new Date(meal.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                      </p>
+                      <div className="history-source">
+                        {meal.source_url ? (
+                          <>
+                            <span>🌐</span>
+                            <span>URL</span>
+                          </>
+                        ) : (
+                          <>
+                            <span>📁</span>
+                            <span>Upload</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div className="history-badge-container">
+                      <span className={`health-badge ${meal.health}`}>
+                        {meal.health}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
       </div>
-
-      <style>
-      {`
-      /* Scanning lines that move across the image */
-      .scan-line {
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #00ffff, transparent);
-        animation: scan 2s linear infinite;
-      }
-      
-      .scan-line-2 {
-        position: absolute;
-        bottom: 0;
-        right: -100%;
-        width: 100%;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, #ff00ff, transparent);
-        animation: scan-reverse 2.5s linear infinite;
-      }
-      
-      @keyframes scan {
-        0% { left: -100%; }
-        100% { left: 100%; }
-      }
-      
-      @keyframes scan-reverse {
-        0% { right: -100%; }
-        100% { right: 100%; }
-      }
-      
-      /* AI Scanner with pulsing effect */
-      .ai-scanner {
-        position: relative;
-        margin: 20px 0;
-      }
-      
-      .ai-core {
-        position: relative;
-        width: 60px;
-        height: 60px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 24px;
-        border: 2px solid #00ffff;
-        border-radius: 50%;
-        background: rgba(0,255,255,0.1);
-        animation: rotate 3s linear infinite;
-      }
-      
-      .ai-pulse {
-        position: absolute;
-        width: 80px;
-        height: 80px;
-        border: 2px solid #00ffff;
-        border-radius: 50%;
-        animation: pulse 1.5s ease-out infinite;
-      }
-      
-      .ai-pulse-2 {
-        position: absolute;
-        width: 100px;
-        height: 100px;
-        border: 1px solid #ff00ff;
-        border-radius: 50%;
-        animation: pulse 2s ease-out infinite 0.5s;
-      }
-      
-      @keyframes rotate {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-      
-      @keyframes pulse {
-        0% {
-          transform: scale(0.8);
-          opacity: 1;
-        }
-        100% {
-          transform: scale(1.5);
-          opacity: 0;
-        }
-      }
-      
-      /* Progress dots */
-      .progress-dots {
-        display: flex;
-        gap: 8px;
-        margin-top: 20px;
-      }
-      
-      .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: #00ffff;
-        animation: dot-pulse 1.4s ease-in-out infinite both;
-      }
-      
-      .dot:nth-child(1) { animation-delay: -0.32s; }
-      .dot:nth-child(2) { animation-delay: -0.16s; }
-      .dot:nth-child(3) { animation-delay: 0s; }
-      
-      @keyframes dot-pulse {
-        0%, 80%, 100% {
-          transform: scale(0.5);
-          opacity: 0.5;
-        }
-        40% {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-      `}
-      </style>
-
     </div>
   )
-
 }
 
 export default App
