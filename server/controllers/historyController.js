@@ -11,10 +11,10 @@ const getMealHistory = async (req, res) => {
       });
     }
 
-    // Get recent meals, newest first
+    // Get recent meals, newest first (limit to last 10 items)
     const meals = await Meal.find()
       .sort({ created_at: -1 })
-      .limit(50); // Reasonable limit to avoid huge responses
+      .limit(10); // Show only the last 10 analysis results
 
     res.json({ meals });
   } catch (error) {
