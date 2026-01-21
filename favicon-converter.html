@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favicon Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin: 10px;
+        }
+        .download-section {
+            margin: 20px 0;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Food AI Favicon Generator</h1>
+    <input type="file" id="imageInput" accept="image/*">
+    <div id="canvasContainer"></div>
+    <div class="download-section" id="downloadSection" style="display: none;">
+        <h3>Download Icons:</h3>
+        <button onclick="downloadIcon(16)">Download 16x16 (favicon.ico)</button>
+        <button onclick="downloadIcon(32)">Download 32x32</button>
+        <button onclick="downloadIcon(192)">Download 192x192</button>
+        <button onclick="downloadIcon(512)">Download 512x512</button>
+    </div>
+
+    <script>
+        let originalImage = null;
+
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        originalImage = img;
+                        generateIcons();
+                        document.getElementById('downloadSection').style.display = 'block';
+                    };
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function generateIcons() {
+            const container = document.getElementById('canvasContainer');
+            container.innerHTML = '';
+            
+            const sizes = [16, 32, 192, 512];
+            
+            sizes.forEach(size => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                canvas.id = `canvas${size}`;
+                
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = 'high';
+                
+                // Draw image to fit canvas
+                ctx.drawImage(originalImage, 0, 0, size, size);
+                
+                const label = document.createElement('div');
+                label.textContent = `${size}x${size}`;
+                
+                const wrapper = document.createElement('div');
+                wrapper.style.display = 'inline-block';
+                wrapper.style.textAlign = 'center';
+                wrapper.appendChild(canvas);
+                wrapper.appendChild(label);
+                
+                container.appendChild(wrapper);
+            });
+        }
+
+        function downloadIcon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const link = document.createElement('a');
+            
+            if (size === 16) {
+                // For favicon, we'll download as ICO format name but it's actually PNG
+                link.download = 'favicon.ico';
+            } else {
+                link.download = `logo${size}.png`;
+            }
+            
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
